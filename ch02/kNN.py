@@ -22,3 +22,27 @@ def classify0(inX, dataSet, labels, k):
     return sortClassCount[0][0]
 
 
+def file2matrix(filename):
+    fr = open(filename)
+    arrayOLine = fr.readline()
+    numberOfLine = len(arrayOLine)
+    returnMat = zeros((numberOfLine, 3))
+    classLabelVector = []
+    index = 0
+    for line in arrayOLine:
+        line = line.strip()
+        listFromLine = line.split('\t')
+        returnMat[index,:] = listFromLine[0:3]
+        classLabelVector.append(int(listFromLine[-1]))
+        index += 1
+    return returnMat, classLabelVector
+
+def autoNorm(dataSet):
+    minVals = dataSet.min(0)
+    maxVals = dataSet.max(0)
+    ranges = maxVals - minVals
+    normDataSet = zeros(shape(dataSet))
+    m = dataSet.shape[0]
+    normDataSet = dataSet - tile(minVals, (m, 1))
+    normDataSet = normDataSet / tile(ranges, (m, 1))
+    return normDataSet, ranges, minVals
